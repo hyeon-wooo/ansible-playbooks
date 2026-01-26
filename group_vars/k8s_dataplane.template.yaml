@@ -6,12 +6,6 @@ nfs_mount_path: ""
 containerd_version_ubuntu: "1.7.24-1"
 containerd_version_rocky: "1.6.32-3.1.el8"
 
-# 쿠버네티스 노드들이 사용할 브릿지 네트워크 설정
-sysctl_config:
-  net.bridge.bridge-nf-call-iptables: 1
-  net.bridge.bridge-nf-call-ip6tables: 1
-  net.ipv4.ip_forward: 1
-
 # NOTE: 마이너 버전까지만 작성합니다.
 k8s_version: "v1.30"
 # NOTE: 컨트롤플레인 노드(마스터노드)에서 kubeadm token create --print-join-command 명령을 실행하여 출력된 내용을 붙여넣습니다.
