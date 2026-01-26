@@ -21,8 +21,8 @@ PROJECT_ROOT
     │       ├── <playbook>.yaml
     └── task
         └── <특정 기능별 디렉터리>
-            ├── <task name>-<os 종류>-<os 메이저버전>.yaml
-            └── <task name>-<os 종류>-<os 메이저버전>.yaml
+            ├── <task name>.<os 종류>-<os 메이저버전>.yaml
+            └── <task name>.<os 종류>-<os 메이저버전>.yaml
 ```
 
 - `/src/task`: NFS 마운트, Swap 메모리 비활성화 등 각 세부 기능의 task가 포함된 디렉터리. 같은 기능이라도 OS 종류와 버전에 따라 명령이 달라질 수 있으므로, 실제 task 파일명에 OS 종류 + 버전을 포함함.
