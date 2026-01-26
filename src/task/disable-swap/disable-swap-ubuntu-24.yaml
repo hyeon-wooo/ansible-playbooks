@@ -1,0 +1,10 @@
+---
+- name: Swap 즉시 끄기 (스왑 메모리가 감지되는 경우만)
+  command: swapoff -a
+  when: ansible_facts['swaptotal_mb'] > 0
+
+- name: fstab에서 Swap 제거 (재부팅 시 유지)
+  replace:
+    path: /etc/fstab
+    regexp: '^([^#].*?\sswap\s+.*)$'
+    replace: '# \1'
