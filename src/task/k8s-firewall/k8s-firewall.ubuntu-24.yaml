@@ -1,0 +1,5 @@
+---
+- name: 내부 네트워크 대역 통신 허용
+  ufw:
+    rule: allow
+    from_ip: "{{ k8s_cluster_cidr }}"

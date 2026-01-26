@@ -1,0 +1,9 @@
+---
+- name: 방화벽 라이브러리 설치 및 내부 네트워크 허용
+  shell: |
+    dnf install -y python3-firewall firewalld
+    systemctl enable --now firewalld
+    firewall-cmd --add-source={{ k8s_cluster_cidr }} --permanent
+    firewall-cmd --reload
+  register: fw_result
+  changed_when: "'Complete!' in fw_result.stdout or 'success' in fw_result.stdout"
