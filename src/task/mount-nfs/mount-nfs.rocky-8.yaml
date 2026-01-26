@@ -1,0 +1,28 @@
+---
+# NOTE: Rocky 8에서 dnf는 내부적으로 python3.6을 사용하는데, 3.9로 돌리면 dnf 관련 에러, 3.6으로 돌리면 ansible 관련 에러 발생 -> dnf로 패키지 설치 시 shell로 우회.
+- name: NFS 클라이언트 패키지 설치
+  shell: "dnf install -y nfs-utils"
+  register: dnf_output
+  # 이미 설치되어 있으면 'nothing to do'가 뜨므로, 설치되었을 때만 changed로 표시
+  changed_when: "'Installing' in dnf_output.stdout or 'Upgraded' in dnf_output.stdout"
+
+# NFS 통신을 위해 필요한 시스템 서비스
+- name: rpcbind 서비스 활성화 및 시작
+  systemd:
+    name: rpcbind
+    state: started
+    enabled: yes
+
+- name: 마운트할 로컬 디렉토리 생성
+  file:
+    path: "{{ nfs_mount_path }}"
+    state: directory
+    mode: "0755"
+
+- name: 마운트
+  mount:
+    path: "{{ nfs_mount_path }}"
+    src: "{{ nfs_server_ip }}:{{ nfs_export_path }}"
+    fstype: nfs
+    opts: defaults
+    state: mounted

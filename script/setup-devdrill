@@ -3,7 +3,7 @@
 PROJECT_ROOT=$(dirname "$(cd "$(dirname "$0")" && pwd)")
 cd "$PROJECT_ROOT"
 
-ansible-playbook -i inventory.ini src/playbook/setup-k8s-dataplane/main.yaml
+ansible-playbook -i inventory.ini src/playbook/k8s_dataplane/main.yaml
 
 # NOTE: 추후, devdrill 노드의 추가 설정이 필요할 때 주석 해제.
-# ansible-playbook -i inventory.ini src/playbook/setup-k8s-dataplane/devdrill.yaml
+# ansible-playbook -i inventory.ini src/playbook/k8s_dataplane/devdrill.yaml

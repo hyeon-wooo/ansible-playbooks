@@ -1,0 +1,10 @@
+---
+- name: 데이터플레인 노드 기초 세팅
+  hosts: k8s_dataplane
+  become: yes
+  tasks:
+    # - name: "스왑 비활성화"
+    #   include_tasks: "../../task/disable-swap/disable-swap.{{ ansible_facts['distribution'] | lower }}-{{ ansible_facts['distribution_major_version'] }}.yaml"
+
+    - name: "NFS 마운트"
+      include_tasks: "../../task/mount-nfs/mount-nfs.{{ ansible_facts['distribution'] | lower }}-{{ ansible_facts['distribution_major_version'] }}.yaml"
