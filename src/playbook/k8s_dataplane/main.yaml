@@ -3,27 +3,36 @@
   hosts: k8s_dataplane
   become: yes
   tasks:
-    - name: "스왑 비활성화"
-      include_tasks: "../../task/disable-swap/disable-swap.{{ ansible_facts['distribution'] | lower }}-{{ ansible_facts['distribution_major_version'] }}.yaml"
+    - name: "호스트네임 등록"
+      include_tasks: "../../task/add-hostname/add-hostname.yaml"
 
-    - name: "NFS 마운트"
-      include_tasks: "../../task/mount-nfs/mount-nfs.{{ ansible_facts['distribution'] | lower }}-{{ ansible_facts['distribution_major_version'] }}.yaml"
-      when:
-        - nfs_server_ip is defined
-        - nfs_mount_path is defined
-        - nfs_export_path is defined
+    # - name: "스왑 비활성화"
+    #   include_tasks: "../../task/disable-swap/disable-swap.{{ ansible_facts['distribution'] | lower }}-{{ ansible_facts['distribution_major_version'] }}.yaml"
+
+    # - name: "NFS 마운트"
+    #   include_tasks: "../../task/mount-nfs/mount-nfs.{{ ansible_facts['distribution'] | lower }}-{{ ansible_facts['distribution_major_version'] }}.yaml"
+    #   when:
+    #     - nfs_server_ip is defined
+    #     - nfs_mount_path is defined
+    #     - nfs_export_path is defined
 
     - name: "커널 모듈 로드"
       include_tasks: "../../task/setup-kernel-network/setup-kernel-network.yaml"
 
-    - name: "containerd 설치"
-      include_tasks: "../../task/containerd-install/containerd-install.{{ ansible_facts['distribution'] | lower }}-{{ ansible_facts['distribution_major_version'] }}.yaml"
+    # - name: "containerd 설치"
+    #   include_tasks: "../../task/containerd-install/containerd-install.{{ ansible_facts['distribution'] | lower }}-{{ ansible_facts['distribution_major_version'] }}.yaml"
 
-    - name: "containerd 설정"
-      include_tasks: "../../task/containerd-setup/containerd-setup.yaml"
+    # - name: "containerd 설정"
+    #   include_tasks: "../../task/containerd-setup/containerd-setup.yaml"
 
-    - name: "쿠버네티스 설치"
-      include_tasks: "../../task/k8s-tool/k8s-tool.{{ ansible_facts['distribution'] | lower }}-{{ ansible_facts['distribution_major_version'] }}.yaml"
+    # - name: "쿠버네티스 설치"
+    #   include_tasks: "../../task/k8s-tool/k8s-tool.{{ ansible_facts['distribution'] | lower }}-{{ ansible_facts['distribution_major_version'] }}.yaml"
+
+    # - name: "방화벽 화이트리스트 설정"
+    #   include_tasks: "../../task/k8s-firewall/k8s-firewall.{{ ansible_facts['distribution'] | lower }}-{{ ansible_facts['distribution_major_version'] }}.yaml"
+
+    - name: "클러스터 Join"
+      include_tasks: "../../task/k8s-join/k8s-join.{{ ansible_facts['distribution'] | lower }}-{{ ansible_facts['distribution_major_version'] }}.yaml"
 
   handlers:
     - name: restart containerd

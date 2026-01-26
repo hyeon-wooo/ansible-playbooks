@@ -1,0 +1,9 @@
+---
+- name: 이미 조인되었는지 검사
+  shell: ls /etc/kubernetes/kubelet.conf
+  register: kubelet_conf
+  ignore_errors: yes
+
+- name: kubeadm join 실행
+  shell: "{{ k8s_join_command }}"
+  when: kubelet_conf.rc != 0
