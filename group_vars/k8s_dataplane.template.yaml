@@ -1,3 +1,13 @@
 nfs_server_ip: ""
 nfs_export_path: ""
 nfs_mount_path: ""
+
+# 설치할 containerd 버전 (미지정 시 latest)
+containerd_version_ubuntu: "1.7.24-1"
+containerd_version_rocky: "1.6.32-3.1.el8"
+
+# 쿠버네티스 노드들이 사용할 브릿지 네트워크 설정
+sysctl_config:
+  net.bridge.bridge-nf-call-iptables: 1
+  net.bridge.bridge-nf-call-ip6tables: 1
+  net.ipv4.ip_forward: 1

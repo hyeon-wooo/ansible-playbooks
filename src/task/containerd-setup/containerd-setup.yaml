@@ -1,0 +1,13 @@
+---
+- name: containerd 기본 설정 생성 및 SystemdCgroup 활성화
+  shell: |
+    mkdir -p /etc/containerd
+    containerd config default > /etc/containerd/config.toml
+    sed -i 's/SystemdCgroup = false/SystemdCgroup = true/g' /etc/containerd/config.toml
+  notify: restart containerd
+
+- name: containerd 서비스 시작 및 활성화
+  systemd:
+    name: containerd
+    state: started
+    enabled: yes

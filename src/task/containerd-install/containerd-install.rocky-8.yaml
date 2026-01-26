@@ -1,0 +1,16 @@
+---
+- name: containerd 설치
+  block:
+    - name: Rocky용 Docker 저장소 등록
+      shell: "dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo"
+      args:
+        creates: /etc/yum.repos.d/docker-ce.repo
+    - name: containerd.io 설치 # 파이썬 버전 이슈로 cnf 모듈 대신 shell로 우회
+      shell: |
+        {% if containerd_version_rocky | default('latest') == 'latest' %}
+        dnf install -y containerd.io
+        {% else %}
+        dnf install -y containerd.io-{{ containerd_version_rocky }}
+        {% endif %}
+      changed_when: "'Installing' in containerd_dnf.stdout or 'Upgrading' in containerd_dnf.stdout"
+      register: containerd_dnf

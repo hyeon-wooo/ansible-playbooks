@@ -12,3 +12,18 @@
         - nfs_server_ip is defined
         - nfs_mount_path is defined
         - nfs_export_path is defined
+
+    - name: "커널 모듈 로드"
+      include_tasks: "../../task/setup-kernel-network/setup-kernel-network.yaml"
+
+    - name: "containerd 설치"
+      include_tasks: "../../task/containerd-install/containerd-install.{{ ansible_facts['distribution'] | lower }}-{{ ansible_facts['distribution_major_version'] }}.yaml"
+
+    - name: "containerd 설정"
+      include_tasks: "../../task/containerd-setup/containerd-setup.yaml"
+
+  handlers:
+    - name: restart containerd
+      systemd:
+        name: containerd
+        state: restarted
