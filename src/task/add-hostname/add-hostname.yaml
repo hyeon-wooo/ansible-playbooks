@@ -1,0 +1,6 @@
+---
+- name: /etc/hosts에 자기 자신 등록
+  lineinfile:
+    path: /etc/hosts
+    line: "{{ ansible_host }} {{ inventory_hostname }}"
+    state: present
