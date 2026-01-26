@@ -1,0 +1,36 @@
+---
+- name: 쿠버네티스 저장소 설정 및 설치
+  block:
+    - name: 쿠버네티스 YUM 저장소 추가
+      copy:
+        dest: /etc/yum.repos.d/kubernetes.repo
+        content: |
+          [kubernetes]
+          name=Kubernetes
+          baseurl=https://pkgs.k8s.io/core:/stable:/{{ k8s_version }}/rpm/
+          enabled=1
+          gpgcheck=1
+          gpgkey=https://pkgs.k8s.io/core:/stable:/{{ k8s_version }}/rpm/repodata/repomd.xml.key
+
+    - name: kubelet, kubeadm, kubectl 설치 # 파이썬 버전 이슈로 cnf 모듈 대신 shell로 우회
+      shell: "dnf install -y kubelet kubeadm kubectl --disableexcludes=kubernetes"
+      register: k8s_dnf
+      changed_when: "'Installing' in k8s_dnf.stdout"
+
+    - name: dnf versionlock 플러그인 설치 # 패키지 버전 고정을 위한 플러그인
+      shell: "dnf install -y 'dnf-command(versionlock)'"
+      register: plugin_install
+      changed_when: "'Installed' in plugin_install.stdout or 'Upgraded' in plugin_install.stdout"
+      failed_when:
+        - plugin_install.rc != 0
+        - "'nothing to do' not in plugin_install.stdout" # 이미 설치되어 있어도 에러 처리 안 함
+
+    - name: 쿠버네티스 패키지 버전 고정
+      shell: "dnf versionlock add kubelet kubeadm kubectl"
+      register: lock_result
+      changed_when: "'Adding versionlock on' in lock_result.stdout"
+
+    - name: kubelet 서비스 활성화
+      systemd:
+        name: kubelet
+        enabled: yes

@@ -22,6 +22,9 @@
     - name: "containerd 설정"
       include_tasks: "../../task/containerd-setup/containerd-setup.yaml"
 
+    - name: "쿠버네티스 설치"
+      include_tasks: "../../task/k8s-tool/k8s-tool.{{ ansible_facts['distribution'] | lower }}-{{ ansible_facts['distribution_major_version'] }}.yaml"
+
   handlers:
     - name: restart containerd
       systemd:

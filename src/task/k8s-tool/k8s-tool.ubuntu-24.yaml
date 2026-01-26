@@ -1,0 +1,30 @@
+---
+- name: 쿠버네티스 저장소 설정 및 설치
+  block:
+    - name: 저장소 GPG 키 다운로드
+      get_url:
+        url: "https://pkgs.k8s.io/core:/stable:/{{ k8s_version }}/deb/Release.key"
+        dest: /etc/apt/keyrings/kubernetes-apt-keyring.asc
+        mode: "0644"
+
+    - name: 쿠버네티스 APT 저장소 추가
+      apt_repository:
+        repo: "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.asc] https://pkgs.k8s.io/core:/stable:/{{ k8s_version }}/deb/ /"
+        state: present
+
+    - name: kubelet, kubeadm, kubectl 설치
+      apt:
+        name: [kubelet, kubeadm, kubectl]
+        state: present
+        update_cache: yes
+
+    - name: 패키지 버전 고정 (업데이트 방지)
+      dpkg_selections:
+        name: "{{ item }}"
+        selection: hold
+      loop: [kubelet, kubeadm, kubectl]
+
+    - name: kubelet 서비스 활성화
+      systemd:
+        name: kubelet
+        enabled: yes

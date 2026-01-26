@@ -11,3 +11,6 @@ sysctl_config:
   net.bridge.bridge-nf-call-iptables: 1
   net.bridge.bridge-nf-call-ip6tables: 1
   net.ipv4.ip_forward: 1
+
+# NOTE: 마이너 버전까지만 작성합니다.
+k8s_version: "v1.30"
