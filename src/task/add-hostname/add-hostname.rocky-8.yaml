@@ -1,0 +1,19 @@
+---
+- name: /etc/hosts에 자기 자신 등록
+  lineinfile:
+    path: /etc/hosts
+    line: "{{ ansible_host }} {{ inventory_hostname }}"
+    state: present
+
+- name: DNS 참조 (디렉터리 생성)
+  file:
+    path: /run/systemd/resolve
+    state: directory
+    mode: "0755"
+
+- name: DNS 참조 (심볼링 링크 생성)
+  file:
+    src: /etc/resolv.conf
+    dest: /run/systemd/resolve/resolv.conf
+    state: link
+    force: yes
